@@ -5,39 +5,17 @@
 
 'use strict';
 
-var React = require('react-native');
-var {
-  View,
-  PropTypes,
-  StyleSheet,
-  requireNativeComponent,
-} = React;
+import React, {Component, PropTypes} from 'react';
+import {View, requireNativeComponent, StyleSheet} from 'react-native';
 
 type Props = {
   isVisible: boolean;
 }
 
-var Overlay = React.createClass({
-  propTypes: {
-    /**
-     * When this property is set to `true`, the Overlay will appear on
-     * `UIWindowLevelStatusBar`, otherwise it will appear below that.
-     */
-    aboveStatusBar: React.PropTypes.bool,
-
-    /**
-     * Determines the visibility of the Overlay. When it is not visible,
-     * an empty View is rendered.
-     */
-    isVisible: React.PropTypes.bool,
-  },
-
-  getDefaultProps(): Props {
-    return {
-      aboveStatusBar: false,
-      isVisible: false,
-    }
-  },
+class Overlay extends Component {
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     var {
@@ -47,14 +25,33 @@ var Overlay = React.createClass({
     if (this.props.isVisible) {
       return (
         <RNOverlay isVisible={true} style={styles.container} pointerEvents="none" aboveStatusBar={this.props.aboveStatusBar}>
-          {React.Children.map(this.props.children, function(child) { return React.cloneElement(child); } )}
+          {React.Children.map(this.props.children, React.cloneElement)}
         </RNOverlay>
       );
     } else {
       return <View />;
     }
-  },
-});
+  }
+}
+
+Overlay.propTypes = {
+  /**
+   * When this property is set to `true`, the Overlay will appear on
+   * `UIWindowLevelStatusBar`, otherwise it will appear below that.
+   */
+  aboveStatusBar: PropTypes.bool,
+
+  /**
+   * Determines the visibility of the Overlay. When it is not visible,
+   * an empty View is rendered.
+   */
+  isVisible: PropTypes.bool,
+};
+
+Overlay.defaultProps = {
+  aboveStatusBar: false,
+  isVisible: false,
+}
 
 var RNOverlay = requireNativeComponent('RNOverlay', Overlay);
 
